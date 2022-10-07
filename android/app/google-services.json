@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "425031515670",
+    "project_id": "task-rare",
+    "storage_bucket": "task-rare.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:425031515670:android:daf4e2fe79bebcc1903f37",
+        "android_client_info": {
+          "package_name": "com.example.taskriverpod"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "425031515670-p7tjev0llnq7tesq4rrnpr9c1rdlslg7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyArAkF0kC8FbYasKi8jLVQck0yvAfOAkBg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "425031515670-p7tjev0llnq7tesq4rrnpr9c1rdlslg7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

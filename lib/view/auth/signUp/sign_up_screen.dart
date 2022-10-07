@@ -1,8 +1,11 @@
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jwt_decode/jwt_decode.dart';
 import 'package:taskriverpod/view/homePage/home_navigator_screen.dart';
 
+import '../../../viewModel/loginVm.dart';
 import '../logIn/log_in_screen.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -72,146 +75,168 @@ class _SignUpPageState extends State<SignUpPage> {
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
-        body: Center(
-            child: SingleChildScrollView(
+        body: Consumer(
+            builder: (context,ref,child) {
+              final item = ref.watch(logIn);
+            return Center(
+                child: SingleChildScrollView(
       padding: EdgeInsets.all(15),
       child: Column(children: [
-        Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              TextFormField(
-                keyboardType: TextInputType.emailAddress,
-                controller: _emailController,
-                validator: (value) =>
-                    value!.isEmpty ? 'enter a valid email' : null,
-                style: TextStyle(
-                  color: Colors.black,
-                ),
-                //This will obscure text dynamically
-
-                decoration: InputDecoration(
-                  labelText: 'Email',
-
-                  // hintText: 'Enter your email or phone',
-                  // Here is key idea
-                  fillColor: Colors.white,
-                  filled: true,
-
-                  labelStyle: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              TextFormField(
-                keyboardType: TextInputType.text,
-                controller: _passwordController,
-                obscureText: !_passwordVisible,
-                validator: (value) =>
-                    value!.isEmpty ? 'enter a valid password' : null,
-                //This will obscure text dynamically
-                cursorColor: Colors.black,
-                style: TextStyle(
-                  color: Colors.black,
-                ),
-                decoration: InputDecoration(
-                  labelText: 'Password',
-                  // hintText: 'Enter your password',
-                  // Here is key idea
-
-                  fillColor: Colors.white,
-                  filled: true,
-
-                  labelStyle: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      // Based on passwordVisible state choose the icon
-                      _passwordVisible
-                          ? Icons.visibility
-                          : Icons.visibility_off,
+            Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  TextFormField(
+                    keyboardType: TextInputType.emailAddress,
+                    controller: _emailController,
+                    validator: (value) =>
+                        value!.isEmpty ? 'enter a valid email' : null,
+                    style: TextStyle(
+                      color: Colors.black,
                     ),
-                    onPressed: () {
-                      // Update the state i.e. toogle the state of passwordVisible variable
-                      setState(() {
-                        _passwordVisible = !_passwordVisible;
-                      });
-                    },
+                    //This will obscure text dynamically
+
+                    decoration: InputDecoration(
+                      labelText: 'Email',
+
+                      // hintText: 'Enter your email or phone',
+                      // Here is key idea
+                      fillColor: Colors.white,
+                      filled: true,
+
+                      labelStyle: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
-                ),
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              SizedBox(
-                height: 15,
-              ),
-              SizedBox(
-                width: size.width,
-                height: 50,
-                child: ElevatedButton(
-                  child: const Text(
-                    'Create Company Account',
+                  const SizedBox(
+                    height: 15,
                   ),
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      _formKey.currentState!.save();
-                      // register();
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //     builder: (context) =>
-                      //         HomePage()
-                      //   ),
-                      // );
-                      hs256();
-                    }
-                  },
-                ),
+                  TextFormField(
+                    keyboardType: TextInputType.text,
+                    controller: _passwordController,
+                    obscureText: !_passwordVisible,
+                    validator: (value) =>
+                        value!.isEmpty ? 'enter a valid password' : null,
+                    //This will obscure text dynamically
+                    cursorColor: Colors.black,
+                    style: TextStyle(
+                      color: Colors.black,
+                    ),
+                    decoration: InputDecoration(
+                      labelText: 'Password',
+                      // hintText: 'Enter your password',
+                      // Here is key idea
+
+                      fillColor: Colors.white,
+                      filled: true,
+
+                      labelStyle: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          // Based on passwordVisible state choose the icon
+                          _passwordVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                        ),
+                        onPressed: () {
+                          // Update the state i.e. toogle the state of passwordVisible variable
+                          setState(() {
+                            _passwordVisible = !_passwordVisible;
+                          });
+                        },
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  SizedBox(
+                    width: size.width,
+                    height: 50,
+                    child: ElevatedButton(
+                      child: const Text(
+                        'Create Company Account',
+                      ),
+                      onPressed: () async {
+                        if (_formKey.currentState!.validate()) {
+                          _formKey.currentState!.save();
+                          item.setRegister(_emailController.text, _passwordController.text, context);
+                          // register();
+                          // Navigator.push(
+                          //   context,
+                          //   MaterialPageRoute(
+                          //     builder: (context) =>
+                          //         HomePage()
+                          //   ),
+                          // );
+                          // try {
+                          //   final credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                          //     email: _emailController.text,
+                          //     password: _passwordController.text,
+                          //   );
+                          //   print(credential.user!.uid);
+                          //   print(credential.credential);
+                          // } on FirebaseAuthException catch (e) {
+                          //   if (e.code == 'weak-password') {
+                          //     print('The password provided is too weak.');
+                          //   } else if (e.code == 'email-already-in-use') {
+                          //     print('The account already exists for that email.');
+                          //
+                          //   }
+                          // } catch (e) {
+                          //   print(e);
+                          // }
+                        }
+                      },
+                    ),
+                  ),
+                  SizedBox(
+                    height: size.height * .07,
+                  ),
+                  Container(
+                      alignment: Alignment.bottomCenter,
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text('Already have an account?',
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.grey)),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pushAndRemoveUntil(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => LogInPage()),
+                                    (route) => false);
+                                // Navigator.push(
+                                //     context,
+                                //     MaterialPageRoute(
+                                //         builder: (context) => const LogInPage()));
+                              },
+                              child: const Text('Login',
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                  )),
+                            )
+                          ])),
+                ],
               ),
-              SizedBox(
-                height: size.height * .07,
-              ),
-              Container(
-                  alignment: Alignment.bottomCenter,
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text('Already have an account?',
-                            style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.grey)),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => LogInPage()),
-                                (route) => false);
-                            // Navigator.push(
-                            //     context,
-                            //     MaterialPageRoute(
-                            //         builder: (context) => const LogInPage()));
-                          },
-                          child: const Text('Login',
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold,
-                              )),
-                        )
-                      ])),
-            ],
-          ),
-        ),
+            ),
       ]),
-    )));
+    ));
+          }
+        ));
   }
 }
