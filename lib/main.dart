@@ -38,6 +38,7 @@ class MyApp extends StatelessWidget {
           blendOnColors: false,
         ),
         visualDensity: FlexColorScheme.comfortablePlatformDensity,
+        fontFamily: 'Cairo',
         useMaterial3: true,
         // To use the playground font, add GoogleFonts package and uncomment
         // fontFamily: GoogleFonts.notoSans().fontFamily,
@@ -51,6 +52,7 @@ class MyApp extends StatelessWidget {
           blendOnLevel: 30,
         ),
         visualDensity: FlexColorScheme.comfortablePlatformDensity,
+        fontFamily: 'Cairo',
         useMaterial3: true,
         // To use the playground font, add GoogleFonts package and uncomment
         // fontFamily: GoogleFonts.notoSans().fontFamily,

@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -25,18 +24,9 @@ class _HomePageState extends State<HomePage> {
     _titleController.dispose();
     _titleEditingController.dispose();
   }
-  final user = FirebaseAuth.instance.currentUser;
-
-  fetchUser(){
-    if (user != null) {
-      final email = user!.email;
-      final uid = user!.uid;
-    }
-  }
 @override
   void initState() {
     super.initState();
-    fetchUser();
   }
   @override
   Widget build(BuildContext context) {
@@ -51,22 +41,6 @@ class _HomePageState extends State<HomePage> {
                     child: FutureBuilder(
                         future: DB.instance.getItems(),
                         builder: (context, snapshot) {
-                          // if (snapshot.data!.isEmpty) {
-                          //   return Center(
-                          //     child: Padding(
-                          //       padding: EdgeInsets.all(10),
-                          //       child: Column(
-                          //         mainAxisSize: MainAxisSize.min,
-                          //         children: [
-                          //           Text(
-                          //             'You have not favorited or bookmarked any Qurans Ayah',
-                          //             textAlign: TextAlign.center,
-                          //           )
-                          //         ],
-                          //       ),
-                          //     ),
-                          //   );
-                          // }
                           if (snapshot.hasData) {
                             if (snapshot.data!.isEmpty) {
                               return Center(
@@ -78,7 +52,7 @@ class _HomePageState extends State<HomePage> {
                                       ConstrainedBox(
                                         constraints: const BoxConstraints(maxWidth: 500),
                                         child: LottieBuilder.asset(
-                                          'assets/93134-not-found.json',
+                                          'assets/json/not-found.json',
                                         ),
                                       ),
                                       Text(
@@ -133,7 +107,7 @@ class _HomePageState extends State<HomePage> {
                                             ],
                                           ),
                                           content: const Text(
-                                            'Are you sure to delete this bookmark ?',
+                                            'Are you sure to delete this item?',
                                             textAlign: TextAlign.center,
                                           ),
                                           actions: [
@@ -144,16 +118,13 @@ class _HomePageState extends State<HomePage> {
                                                 ElevatedButton(
                                                   onPressed: () =>
                                                       Navigator.of(context).pop(false),
-                                                  //return false when click on "NO"
                                                   child: const Text('No'),
                                                 ),
                                                 ElevatedButton(
                                                   onPressed: () {
-                                                    // item.deleteItem(itemsModel.id);
                                                    item.deleteItem(itemsModel.id);
                                                     Navigator.of(context).pop(true);
                                                   },
-                                                  //return true when click on "Yes"
                                                   child: const Text('Yes'),
                                                 )
                                               ],
@@ -163,18 +134,8 @@ class _HomePageState extends State<HomePage> {
                                       );
                                     },
                                     onDismissed: (direction) async {
-                                      // Remove the item from the data source.
-                                      // print('employee Id is $employeeId');
-                                      // await EmployeeHelper.removeEmployee(context, employeeId);
-                                      // DB.instance
-                                      //     .deleteBookmarkAyaRaw(bookmarkAyahModel.text);
-                                      setState(() {
-                                        // employees = EmployeeHelper.getemployees(beautycenterId);
-                                      });
-
-                                      // Then show a snackbar.
                                       Fluttertoast.showToast(
-                                        msg: 'Removed from bookmarks ',
+                                        msg: 'Item Removed',
                                         backgroundColor: Colors.grey,
                                       );
                                     },
@@ -255,7 +216,6 @@ class _HomePageState extends State<HomePage> {
                             var itemExist =
                                 ItemsModel(title: _titleController.text);
                             item.insertItem(itemExist).then((value) => Navigator.of(context).pop());
-                            // DB.instance.insertItem(itemExist).then((value) => Navigator.of(context).pop());
                           },
                           child: const Text('Add item'))
                     ],

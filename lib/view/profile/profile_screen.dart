@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:taskriverpod/viewModel/loginVm.dart';
 
 import '../auth/logIn/log_in_screen.dart';
@@ -13,10 +14,12 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+
+
   @override
   Widget build(BuildContext context) {
     return Consumer(builder: (context, ref, child) {
-      final item = ref.watch(logIn);
+      final auth = ref.watch(logIn);
       return Center(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -29,13 +32,18 @@ class _ProfilePageState extends State<ProfilePage> {
                   child: Padding(
                     padding: const EdgeInsets.all(15.0),
                     child: Text(
-                      item.email!,
+                      auth.email!,
                       style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold),
                     ),
                   )),
+              SizedBox(
+                height: 30,
+              ),
               ElevatedButton(
                   onPressed: () async {
-                    await FirebaseAuth.instance.signOut().then((value) {
+                    var prefs = await SharedPreferences.getInstance();
+                    auth.logOut().then((value) {
+                      prefs.clear();
                       Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
@@ -43,7 +51,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           (route) => false);
                     });
                   },
-                  child: const Text('Log Out'))
+                  child: const Text('Log Out',style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold),))
             ],
           ),
         ),

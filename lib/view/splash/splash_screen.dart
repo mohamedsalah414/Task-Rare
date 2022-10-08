@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:taskriverpod/view/auth/logIn/log_in_screen.dart';
 
@@ -22,7 +23,19 @@ class _SplashPageState extends State<SplashPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    return Scaffold(
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 500),
+            child: LottieBuilder.asset(
+              'assets/json/welcome.json',
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   navigate() async {
